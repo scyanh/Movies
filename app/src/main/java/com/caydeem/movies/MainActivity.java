@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     GridView mMovieGrid;
     Activity mContext;
 
-    private boolean movies_loaded=true;
+    private boolean movies_loaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onResponse(Response<MovieInfo> response, Retrofit retrofit) {
                     if (response.isSuccess()) {
                         MovieInfo movieInfo = response.body();
-                        Log.i(TAG, "zz movieInfo=" + movieInfo);
                         mMovieList = movieInfo.getmMovieList();
 
                         if (mMovieList != null) {
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                         });
 
                     } else {
-                        Log.d(TAG, "Web call error");
+                        Log.d(TAG, "zz call error");
                     }
                 }
 
@@ -129,4 +130,27 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "zz in onSaveInstanceState");
         outState.putParcelableArrayList("movies", (ArrayList<? extends Parcelable>) mMovieList);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        movies_loaded=false;
+        int id = item.getItemId();
+        if (id == R.id.action_order_by_popular) {
+            discoverMovies("popularity.desc", movies_loaded);
+            return true;
+        }
+        if (id == R.id.action_order_by_rate) {
+            discoverMovies("vote_average.desc", movies_loaded);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
 }

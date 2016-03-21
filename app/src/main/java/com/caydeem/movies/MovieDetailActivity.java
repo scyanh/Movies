@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +35,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieReleaseYear=(TextView)findViewById(R.id.movieReleaseYear);
         movieRating=(TextView)findViewById(R.id.movieRating);
         movieOverview=(TextView)findViewById(R.id.movieOverview);
+
+        //ActionBar actionBar = getActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(true);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = this.getIntent();
 
@@ -71,5 +77,16 @@ public class MovieDetailActivity extends AppCompatActivity {
             year = dateMatcher.group(1);
         }
         movieReleaseYear.setText(year);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
